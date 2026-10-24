@@ -11,4 +11,12 @@ if [ ! -f /home/dev/.zshrc ]; then
     chown -R dev:dev /home/dev
 fi
 
+# Seed Pi and its packages independently for existing home volumes.
+# Preserve any Pi configuration the user has already created.
+if [ ! -f /home/dev/.pi/agent/settings.json ]; then
+    mkdir -p /home/dev/.pi
+    cp -a /etc/skel.dev/.pi/. /home/dev/.pi/
+    chown -R dev:dev /home/dev/.pi
+fi
+
 exec /usr/sbin/sshd -D

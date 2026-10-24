@@ -25,6 +25,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 # ---------- Codex CLI ----------
 RUN npm install -g @openai/codex
 
+# ---------- Pi coding agent ----------
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+
 # ---------- Neovim (latest stable from GitHub) ----------
 RUN curl -fsSL -o /tmp/nvim-linux-x86_64.tar.gz \
        "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz" \
@@ -65,7 +68,7 @@ RUN npm install -g @anthropic-ai/claude-code
 
 # ---------- user setup ----------
 RUN useradd -m -s /usr/bin/zsh -G sudo dev \
-    && echo "dev:${DEV_PASSWORD}" | chpasswd
+    && echo "dev:${DEV_PASSWORD}" | chpasswd \
     && echo 'dev ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/dev \
     && chmod 0440 /etc/sudoers.d/dev
 
@@ -89,6 +92,15 @@ RUN mkdir -p /etc/skel.dev/.config \
 RUN [ ! -d /etc/skel.dev/.config/tmux/plugins/tpm ] \
     && git clone https://github.com/tmux-plugins/tpm /etc/skel.dev/.config/tmux/plugins/tpm \
     || true
+
+# ---------- Pi packages ----------
+ARG PI_PACKAGES="pi-subagents pi-mcp-adapter pi-web-access pi-intercom @firstpick/pi-package-webui @firstpick/pi-package-remote-webui pi-btw"
+RUN mkdir -p /etc/skel.dev/.pi/agent \
+    && chown -R dev:dev /etc/skel.dev/.pi \
+    && for package in ${PI_PACKAGES}; do \
+         sudo -u dev env HOME=/etc/skel.dev PI_CODING_AGENT_DIR=/etc/skel.dev/.pi/agent \
+           pi install "npm:${package}"; \
+       done
 
 EXPOSE 22
 
