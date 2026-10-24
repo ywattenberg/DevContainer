@@ -1,0 +1,5 @@
+{
+  "extensions": [
+    "npm:pi-web-access"
+  ]
+}

@@ -93,7 +93,9 @@ RUN [ ! -d /etc/skel.dev/.config/tmux/plugins/tpm ] \
     && git clone https://github.com/tmux-plugins/tpm /etc/skel.dev/.config/tmux/plugins/tpm \
     || true
 
-# ---------- Pi packages ----------
+# ---------- Pi configuration and packages ----------
+COPY --chown=dev:dev config/pi/ /etc/skel.dev/.pi/agent/
+
 ARG PI_PACKAGES="pi-subagents pi-mcp-adapter pi-web-access pi-intercom @firstpick/pi-package-webui @firstpick/pi-package-remote-webui pi-btw"
 RUN mkdir -p /etc/skel.dev/.pi/agent \
     && chown -R dev:dev /etc/skel.dev/.pi \

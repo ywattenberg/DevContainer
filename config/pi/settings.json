@@ -1,0 +1,11 @@
+{
+  "$schema": "https://pi.dev/schemas/settings.schema.json",
+  "theme": "dark",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-sol",
+  "defaultThinkingLevel": "high",
+  "defaultProjectTrust": "ask",
+  "extensions": [
+    "-builtin:mcp"
+  ]
+}
